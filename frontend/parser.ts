@@ -1,5 +1,6 @@
 // deno-lint-ignore-file
 import {
+  AssigmentExpr,
   BinaryExpr,
   Expr,
   Identifier,
@@ -91,13 +92,24 @@ export default class Parser {
     } as VarDeclaration;
     this.expect(
       TokenType.Semicolon,
-      "Variable declaration statment must end with semicolon"
+      "Variable declaration statement must end with semicolon"
     );
     return declaration;
   }
 
   private parse_expr(): Expr {
-    return this.parse_additive_expr();
+    return this.parse_assigment_expr();
+  }
+
+  private parse_assigment_expr(): Expr {
+    const left = this.parse_additive_expr();
+
+    if (this.at().type == TokenType.Equals) {
+      this.eat();
+      const value = this.parse_assigment_expr();
+      return { value, assigne: left, kind: "AssigmentExpr" } as AssigmentExpr;
+    }
+    return left;
   }
 
   private parse_additive_expr(): Expr {
