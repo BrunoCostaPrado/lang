@@ -5,17 +5,20 @@ export enum TokenType {
 
   //Keywords
   Let,
+  Const,
 
   //Grouping * Operators
+  BinaryOperator,
   Equals,
+  Semicolon,
   OpenParen,
   CloseParen,
-  BinaryOperator,
   EOF, //Fim de linha
 }
 
 const KEYSWORDS: Record<string, TokenType> = {
   let: TokenType.Let,
+  const: TokenType.Const,
 };
 
 export interface Token {
@@ -61,6 +64,8 @@ export function tokenize(sourceCode: string): Token[] {
       tokens.push(token(src.shift(), TokenType.BinaryOperator));
     } else if (src[0] == "=") {
       tokens.push(token(src.shift(), TokenType.Equals));
+    } else if (src[0] == ";") {
+      tokens.push(token(src.shift(), TokenType.Semicolon));
     } else {
       //  Tokens de múltiplos caracteres
 

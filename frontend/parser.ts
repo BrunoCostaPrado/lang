@@ -1,14 +1,15 @@
 // deno-lint-ignore-file
 import {
   BinaryExpr,
-  Program,
-  Stmt,
   Expr,
   Identifier,
   NumericLiteral,
+  Program,
+  Stmt,
+  VarDeclaration,
 } from "./ast.ts";
 
-import { tokenize, Token, TokenType } from "./lexer.ts";
+import { Token, tokenize, TokenType } from "./lexer.ts";
 
 export default class Parser {
   private tokens: Token[] = [];
@@ -50,7 +51,49 @@ export default class Parser {
   }
 
   private parse_stmt(): Stmt {
-    return this.parse_expr();
+    switch (this.at().type) {
+      case TokenType.Let:
+        return this.parse_var_declaration();
+      case TokenType.Const:
+
+      default:
+        return this.parse_expr();
+    }
+  }
+  parse_var_declaration(): Stmt {
+    const isConstant = this.eat().type == TokenType.Const;
+    const identifier = this.expect(
+      TokenType.Identifier,
+      "Expected identifier name following let | const keywords"
+    ).value;
+
+    if (this.at().type == TokenType.Semicolon) {
+      this.eat();
+      if (isConstant) {
+        throw "Must assigne value to constant expression. No value provide";
+      }
+      return {
+        kind: "VarDeclaration",
+        identifier,
+        constant: false,
+      } as VarDeclaration;
+    }
+
+    this.expect(
+      TokenType.Equals,
+      "Expected equals token following identifier in var declaration"
+    );
+    const declaration = {
+      kind: "VarDeclaration",
+      value: this.parse_expr(),
+      identifier,
+      constant: isConstant,
+    } as VarDeclaration;
+    this.expect(
+      TokenType.Semicolon,
+      "Variable declaration statment must end with semicolon"
+    );
+    return declaration;
   }
 
   private parse_expr(): Expr {
