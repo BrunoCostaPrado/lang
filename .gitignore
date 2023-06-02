@@ -4,3 +4,8 @@ build.txt
 
 
 dir
+
+
+node_modules
+package.json
+pnpm-lock.yaml
