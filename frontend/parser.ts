@@ -53,8 +53,8 @@ export default class Parser {
   private parse_stmt(): Stmt {
     switch (this.at().type) {
       case TokenType.Let:
-        return this.parse_var_declaration();
       case TokenType.Const:
+        return this.parse_var_declaration();
 
       default:
         return this.parse_expr();
