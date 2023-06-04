@@ -1,16 +1,24 @@
 import Parser from "./frontend/parser.ts";
 import { evaluate } from "./runtime/interpreter.ts";
 import Environment from "./runtime/environment.ts";
-import { MK_NULL, MK_BOOL } from "./runtime/values.ts";
 
+run("./text.txt");
 repl();
+
+async function run(filename: string) {
+  const parser = new Parser();
+  const env = new Environment();
+
+  const input = await Deno.readTextFile(filename);
+  const program = parser.produceAST(input);
+
+  const result = evaluate(program, env);
+  console.log(result);
+}
 
 function repl() {
   const parser = new Parser();
   const env = new Environment();
-  env.declareVar("true", MK_BOOL(true), true);
-  env.declareVar("false", MK_BOOL(false), true);
-  env.declareVar("null", MK_NULL(), true);
 
   console.log("\nRepl v0.1");
 
@@ -20,11 +28,10 @@ function repl() {
     if (!input || input.includes("exit")) {
       Deno.exit(1);
     }
+    
     const program = parser.produceAST(input);
 
     const result = evaluate(program, env);
     console.log(result);
-
-    // console.log("------------\n\n");
   }
 }
