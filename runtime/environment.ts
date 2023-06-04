@@ -16,9 +16,6 @@ export default class Environment {
     this.parent = parentENV;
     this.variables = new Map();
     this.constants = new Set();
-    if (global) {
-      setupScope(this);
-    }
   }
 
   public declareVar(

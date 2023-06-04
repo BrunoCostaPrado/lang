@@ -1,6 +1,6 @@
 import { NumberVal, RuntimeVal } from "./values.ts";
 import {
-  AssigmentExpr,
+  AssignmentExpr,
   BinaryExpr,
   Identifier,
   NumericLiteral,
@@ -25,8 +25,8 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
       } as NumberVal;
     case "Identifier":
       return eval_identifier(astNode as Identifier, env);
-    case "AssigmentExpr":
-      return eval_assignment(astNode as AssigmentExpr, env);
+    case "AssignmentExpr":
+      return eval_assignment(astNode as AssignmentExpr, env);
     case "BinaryExpr":
       return eval_binary_expr(astNode as BinaryExpr, env);
     case "Program":
