@@ -27,7 +27,9 @@ export default class Environment {
       throw `Cannot declare variable ${varname}, already defined`;
     }
     this.variables.set(varname, value);
-    if (constant) this.constants.add(varname);
+    if (constant) {
+      this.constants.add(varname);
+    }
     return value;
   }
 
@@ -46,7 +48,9 @@ export default class Environment {
   }
 
   public resolve(varname: string): Environment {
-    if (this.variables.has(varname)) return this;
+    if (this.variables.has(varname)) {
+      return this;
+    }
 
     if (this.parent == undefined)
       throw `Cannot resolve '${varname}', it does not exist`;
