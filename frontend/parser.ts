@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 import {
-  AssigmentExpr,
+  AssignmentExpr,
   BinaryExpr,
   Expr,
   Identifier,
@@ -109,7 +109,7 @@ export default class Parser {
     if (this.at().type == TokenType.Equals) {
       this.eat();
       const value = this.parse_assigment_expr();
-      return { value, assigne: left, kind: "AssigmentExpr" } as AssigmentExpr;
+      return { value, assigne: left, kind: "AssignmentExpr" } as AssignmentExpr;
     }
     return left;
   }
