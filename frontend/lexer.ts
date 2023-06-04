@@ -39,10 +39,10 @@ function isalpha(src: string) {
 }
 
 function isskippable(str: string) {
-  return str == " " || str == "\n" || str == "\t"|| str == "\r"
+  return str == " " || str == "\n" || str == "\t" || str == "\r";
 }
 
-function isInt(str: string) {
+function isint(str: string) {
   const c = str.charCodeAt(0);
   const bounds = ["0".charCodeAt(0), "9".charCodeAt(0)];
   return c >= bounds[0] && c <= bounds[1];
@@ -94,9 +94,9 @@ export function tokenize(sourceCode: string): Token[] {
       //  Tokens de múltiplos caracteres
 
       //Build Token numero
-      if (isInt(src[0])) {
+      if (isint(src[0])) {
         let num = "";
-        while (src.length > 0 && isInt(src[0])) {
+        while (src.length > 0 && isint(src[0])) {
           num += src.shift();
         }
         tokens.push(token(num, TokenType.Number));

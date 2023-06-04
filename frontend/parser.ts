@@ -100,15 +100,15 @@ export default class Parser {
   }
 
   private parse_expr(): Expr {
-    return this.parse_assigment_expr();
+    return this.parse_assignment_expr();
   }
 
-  private parse_assigment_expr(): Expr {
+  private parse_assignment_expr(): Expr {
     const left = this.parse_object_expr();
 
     if (this.at().type == TokenType.Equals) {
       this.eat();
-      const value = this.parse_assigment_expr();
+      const value = this.parse_assignment_expr();
       return { value, assigne: left, kind: "AssignmentExpr" } as AssignmentExpr;
     }
     return left;
