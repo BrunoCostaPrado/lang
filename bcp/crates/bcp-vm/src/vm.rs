@@ -83,7 +83,7 @@ impl VM {
                     }
                 }
                 OpCode::DefineGlobal => {
-                    let val = self.stack.pop().unwrap_or(Value::Nil);
+                    let val = self.stack.last().cloned().unwrap_or(Value::Nil);
                     let name = format!("var_{}", inst.operands[0]);
                     self.globals.insert(name, val);
                 }

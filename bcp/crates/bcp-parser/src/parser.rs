@@ -13,6 +13,9 @@ impl Parser {
 
     pub fn parse(&mut self) -> Result<Program, String> {
         let mut stmts = Vec::new();
+        while self.peek().kind == TokenType::Newline {
+            self.advance();
+        }
         while self.peek().kind != TokenType::Eof {
             let stmt = self.parse_stmt()?;
             stmts.push(stmt);
@@ -144,6 +147,10 @@ impl Parser {
 
     fn parse_block(&mut self) -> Result<Vec<Stmt>, String> {
         let mut stmts = Vec::new();
+        // skip leading newlines in blocks
+        while self.peek().kind == TokenType::Newline {
+            self.advance();
+        }
         while self.peek().kind != TokenType::CloseBrace && self.peek().kind != TokenType::Eof {
             let stmt = self.parse_stmt()?;
             stmts.push(stmt);
@@ -153,6 +160,19 @@ impl Parser {
         }
         self.expect(TokenType::CloseBrace, "'}' to close block")?;
         Ok(stmts)
+    }
+
+    fn parse_braced_expr(&mut self) -> Result<Expr, String> {
+        self.expect(TokenType::OpenBrace, "'{' for block expression")?;
+        while self.peek().kind == TokenType::Newline {
+            self.advance();
+        }
+        let expr = self.parse_expr(0)?;
+        while self.peek().kind == TokenType::Newline {
+            self.advance();
+        }
+        self.expect(TokenType::CloseBrace, "'}' to close block expression")?;
+        Ok(expr)
     }
 
     fn parse_type(&mut self) -> Result<TypeAnnotation, String> {
@@ -167,11 +187,26 @@ impl Parser {
         Ok(TypeAnnotation { name, params })
     }
 
+    fn is_infix_op(&self, kind: TokenType) -> bool {
+        matches!(kind,
+            TokenType::Equal | TokenType::Plus | TokenType::Minus
+            | TokenType::Star | TokenType::Slash | TokenType::Percent
+            | TokenType::EqualEqual | TokenType::BangEqual
+            | TokenType::Less | TokenType::Greater
+            | TokenType::LessEqual | TokenType::GreaterEqual
+            | TokenType::And | TokenType::Or
+            | TokenType::OpenParen | TokenType::Dot
+        )
+    }
+
     fn parse_expr(&mut self, min_prec: u8) -> Result<Expr, String> {
         let mut left = self.parse_primary()?;
 
         loop {
             if self.peek().kind == TokenType::Eof {
+                break;
+            }
+            if !self.is_infix_op(self.peek().kind) {
                 break;
             }
             let prec = self.peek_precedence();
@@ -288,6 +323,21 @@ impl Parser {
                 let expr = self.parse_expr(0)?;
                 self.expect(TokenType::CloseParen, "')' after expression")?;
                 Ok(expr)
+            }
+            TokenType::If => {
+                let condition = self.parse_expr(0)?;
+                let then_branch = self.parse_braced_expr()?;
+                let else_branch = if self.peek().kind == TokenType::Else {
+                    self.advance();
+                    Some(self.parse_braced_expr()?)
+                } else {
+                    None
+                };
+                Ok(Expr::If {
+                    condition: Box::new(condition),
+                    then_branch: Box::new(then_branch),
+                    else_branch: else_branch.map(Box::new),
+                })
             }
             _ => Err(format!(
                 "Unexpected token {:?} at line {}",

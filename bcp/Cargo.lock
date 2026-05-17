@@ -22,6 +22,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "bcp-integration"
+version = "0.1.0"
+dependencies = [
+ "bcp-bytecode",
+ "bcp-lexer",
+ "bcp-parser",
+ "bcp-typeck",
+ "bcp-vm",
+]
+
+[[package]]
 name = "bcp-lexer"
 version = "0.1.0"
 

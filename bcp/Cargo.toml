@@ -8,3 +8,15 @@ members = [
     "crates/bcp-cli",
 ]
 resolver = "2"
+
+[package]
+name = "bcp-integration"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bcp-lexer = { path = "crates/bcp-lexer" }
+bcp-parser = { path = "crates/bcp-parser" }
+bcp-typeck = { path = "crates/bcp-typeck" }
+bcp-bytecode = { path = "crates/bcp-bytecode" }
+bcp-vm = { path = "crates/bcp-vm" }
