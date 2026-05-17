@@ -1,1 +1,5 @@
-// EMPTY — will be filled in subsequent tasks
+pub mod instruction;
+pub mod codegen;
+
+pub use codegen::{Codegen, Chunk};
+pub use instruction::{Constant, Instruction, OpCode};
