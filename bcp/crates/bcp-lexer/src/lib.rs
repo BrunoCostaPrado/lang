@@ -1,1 +1,5 @@
-// EMPTY — will be filled in subsequent tasks
+pub mod token;
+pub mod lexer;
+
+pub use lexer::tokenize;
+pub use token::{Token, TokenType};
