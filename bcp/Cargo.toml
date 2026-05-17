@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "crates/bcp-lexer",
+    "crates/bcp-parser",
+    "crates/bcp-typeck",
+    "crates/bcp-bytecode",
+    "crates/bcp-vm",
+    "crates/bcp-cli",
+]
+resolver = "2"

@@ -1,0 +1,7 @@
+[package]
+name = "bcp-typeck"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bcp-parser = { path = "../bcp-parser" }

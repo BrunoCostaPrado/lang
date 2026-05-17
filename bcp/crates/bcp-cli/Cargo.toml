@@ -1,0 +1,11 @@
+[package]
+name = "bcp-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bcp-lexer = { path = "../bcp-lexer" }
+bcp-parser = { path = "../bcp-parser" }
+bcp-typeck = { path = "../bcp-typeck" }
+bcp-bytecode = { path = "../bcp-bytecode" }
+bcp-vm = { path = "../bcp-vm" }
